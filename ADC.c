@@ -27,7 +27,7 @@ volatile bool estado_leds_pwm = true; // Começa ligado
 volatile bool exibir_borda = false; // Estado inicial: sem borda
 
 
-void inicializar_hardware() {
+void inicializar_hardware(){
     stdio_init_all();
 
     // Inicializa botões
@@ -104,9 +104,9 @@ void atualizar_leds_rgb(){
     int blue = 0;
 
     adc_select_input(0);  // Seleciona canal do eixo Y
-    uint16_t valor_y = adc_read();  // Lê ADC do eixo Y
+    uint16_t valor_x = adc_read();  // Lê ADC do eixo Y
     adc_select_input(1);  // Seleciona canal do eixo X
-    uint16_t valor_x = adc_read();  // Lê ADC do eixo X
+    uint16_t valor_y = adc_read();  // Lê ADC do eixo X
 
     if(valor_x > 2400){
         red = valor_x - 2400;
@@ -126,7 +126,7 @@ void atualizar_leds_rgb(){
 
 // Posição inicial do quadrado
 int pos_x = 30;
-int pos_y = 60;
+int pos_y = 62;
 const int tamanho_quadrado = 8;
 
 // Define limites do display (evita sair da tela)
@@ -135,12 +135,13 @@ const int limite_x_max = 64 - tamanho_quadrado;
 const int limite_y_min = 0;
 const int limite_y_max = 128 - tamanho_quadrado;
 
-void mover_quadrado() {
+void mover_quadrado(){
     // Lê valores do joystick
     adc_select_input(0); // Eixo X
-    uint16_t valor_y = adc_read();
-    adc_select_input(1); // Eixo Y
     uint16_t valor_x = adc_read();
+    
+    adc_select_input(1); // Eixo Y
+    uint16_t valor_y = adc_read();
 
     // Define deslocamento dinâmico baseado na inclinação do joystick
     int deslocamento_x = 0;
@@ -159,13 +160,13 @@ void mover_quadrado() {
 
     // Eixo Y (Movimento vertical)
     if (valor_y > 3000) {
-        deslocamento_y = -2;  // Movimento rápido para baixo
+        deslocamento_y = 2;  // Movimento rápido para baixo
     } else if (valor_y > 2500) {
-        deslocamento_y = -1;  // Movimento lento para baixo
+        deslocamento_y = 1;  // Movimento lento para baixo
     } else if (valor_y < 1000) {
-        deslocamento_y = 2; // Movimento rápido para cima
+        deslocamento_y = -2; // Movimento rápido para cima
     } else if (valor_y < 1500) {
-        deslocamento_y = 1; // Movimento lento para cima
+        deslocamento_y = -1; // Movimento lento para cima
     }
 
     // Atualiza a posição do quadrado dentro dos limites da tela
