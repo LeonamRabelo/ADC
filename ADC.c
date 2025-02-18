@@ -114,12 +114,12 @@ void atualizar_leds_rgb(){
     if(valor_y > 2400){
         red = valor_y - 2400;
     }else if(valor_y < 1800){
-        red = 1700 - valor_y;
+        red = 1800 - valor_y;
     }
     if(valor_x > 2400){
         blue = valor_x - 2400;
     }else if(valor_x < 1800){
-        blue = 1700 - valor_x;
+        blue = 1800 - valor_x;
     }
 
     pwm_set_gpio_level(LED_RED, red); //Atualiza LED Vermelho
