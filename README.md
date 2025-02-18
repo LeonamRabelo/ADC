@@ -65,8 +65,5 @@ _ Compile o projeto para gerar o arquivo .uf2.
 
 ---
 
-Agora é só testar e se divertir! 🚀  
-Caso precise de ajustes, me avise! 😃  
-
 ## Autor
 Desenvolvido por Leonam S. Rabelo
