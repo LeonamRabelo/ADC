@@ -104,20 +104,20 @@ void atualizar_leds_rgb(){
     int blue = 0;
 
     adc_select_input(0);  // Seleciona canal do eixo Y
-    uint16_t valor_x = adc_read();  // Lê ADC do eixo Y
+    uint16_t valor_y = adc_read();  // Lê ADC do eixo Y
     adc_select_input(1);  // Seleciona canal do eixo X
-    uint16_t valor_y = adc_read();  // Lê ADC do eixo X
-
-    if(valor_x > 2400){
-        red = valor_x - 2400;
-    }else if(valor_x < 1800){
-        red = 1700 - valor_x;
-    }
+    uint16_t valor_x = adc_read();  // Lê ADC do eixo X
 
     if(valor_y > 2400){
-        blue = valor_y - 2400;
+        red = valor_y - 2400;
     }else if(valor_y < 1800){
-        blue = 1700 - valor_y;
+        red = 1700 - valor_y;
+    }
+
+    if(valor_x > 2400){
+        blue = valor_x - 2400;
+    }else if(valor_x < 1800){
+        blue = 1700 - valor_x;
     }
 
     pwm_set_gpio_level(LED_RED, red); // Atualiza LED Vermelho
@@ -125,58 +125,58 @@ void atualizar_leds_rgb(){
 }
 
 // Posição inicial do quadrado
-int pos_x = 30;
-int pos_y = 62;
+int pos_y = 30;
+int pos_x = 62;
 const int tamanho_quadrado = 8;
 
 // Define limites do display (evita sair da tela)
-const int limite_x_min = 0;
-const int limite_x_max = 64 - tamanho_quadrado;
 const int limite_y_min = 0;
-const int limite_y_max = 128 - tamanho_quadrado;
+const int limite_y_max = 64 - tamanho_quadrado;
+const int limite_x_min = 0;
+const int limite_x_max = 128 - tamanho_quadrado;
 
 void mover_quadrado(){
     // Lê valores do joystick
-    adc_select_input(0); // Eixo X
-    uint16_t valor_x = adc_read();
-    
-    adc_select_input(1); // Eixo Y
+    adc_select_input(0); // Eixo Y
     uint16_t valor_y = adc_read();
+    
+    adc_select_input(1); // Eixo X
+    uint16_t valor_x = adc_read();
 
     // Define deslocamento dinâmico baseado na inclinação do joystick
-    int deslocamento_x = 0;
     int deslocamento_y = 0;
+    int deslocamento_x = 0;
 
-    // Eixo X (Movimento horizontal)
-    if (valor_x > 3000) {
-        deslocamento_x = -2;  // Movimento rápido para direita
-    } else if (valor_x > 2500) {
-        deslocamento_x = -1;  // Movimento lento para direita
-    } else if (valor_x < 1000) {
-        deslocamento_x = 2; // Movimento rápido para esquerda
-    } else if (valor_x < 1500) {
-        deslocamento_x = 1; // Movimento lento para esquerda
+    // Eixo Y (Movimento horizontal)
+    if (valor_y > 3000) {
+        deslocamento_y = -2;  // Movimento rápido para direita
+    } else if (valor_y > 2500) {
+        deslocamento_y = -1;  // Movimento lento para direita
+    } else if (valor_y < 1000) {
+        deslocamento_y = 2; // Movimento rápido para esquerda
+    } else if (valor_y < 1500) {
+        deslocamento_y = 1; // Movimento lento para esquerda
     }
 
     // Eixo Y (Movimento vertical)
-    if (valor_y > 3000) {
-        deslocamento_y = 2;  // Movimento rápido para baixo
-    } else if (valor_y > 2500) {
-        deslocamento_y = 1;  // Movimento lento para baixo
-    } else if (valor_y < 1000) {
-        deslocamento_y = -2; // Movimento rápido para cima
-    } else if (valor_y < 1500) {
-        deslocamento_y = -1; // Movimento lento para cima
+    if (valor_x > 3000) {
+        deslocamento_x = 2;  // Movimento rápido para baixo
+    } else if (valor_x > 2500) {
+        deslocamento_x = 1;  // Movimento lento para baixo
+    } else if (valor_x < 1000) {
+        deslocamento_x = -2; // Movimento rápido para cima
+    } else if (valor_x < 1500) {
+        deslocamento_x = -1; // Movimento lento para cima
     }
 
     // Atualiza a posição do quadrado dentro dos limites da tela
-    pos_x += deslocamento_x;  // Muda posição horizontal (eixo X)
-    pos_y += deslocamento_y;  // Muda posição vertical (eixo Y)
+    pos_y += deslocamento_y;  // Muda posição horizontal (eixo X)
+    pos_x += deslocamento_x;  // Muda posição vertical (eixo Y)
 
-    if (pos_x < limite_x_min) pos_x = limite_x_min;
-    if (pos_x > limite_x_max) pos_x = limite_x_max;
     if (pos_y < limite_y_min) pos_y = limite_y_min;
     if (pos_y > limite_y_max) pos_y = limite_y_max;
+    if (pos_x < limite_x_min) pos_x = limite_x_min;
+    if (pos_x > limite_x_max) pos_x = limite_x_max;
 
     // Atualiza o display
     ssd1306_fill(&ssd, false); // Limpa a tela
@@ -196,7 +196,7 @@ void mover_quadrado(){
     }
 
     // Desenha o quadrado que se move
-    ssd1306_rect(&ssd, pos_x, pos_y, tamanho_quadrado, tamanho_quadrado, true, true); 
+    ssd1306_rect(&ssd, pos_y, pos_x, tamanho_quadrado, tamanho_quadrado, true, true); 
 
     ssd1306_send_data(&ssd); // Envia para o display
 }
